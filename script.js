@@ -8,7 +8,7 @@ const countdownEl = document.getElementById('countdown');
 const openSound = document.getElementById('openSound');
 const music = document.getElementById('music');
 
-const text = 'Hay personas que llegan y cambian todo… y vos sos una de ellas.';
+const text = '5 años y contando, pero nunca es mal momento para preguntarte si...';
 let index = 0;
 let noCount = 0;
 
@@ -43,7 +43,7 @@ noBtn.addEventListener('mouseover', () => {
 noBtn.addEventListener('click', () => {
   typedText.textContent = '';
   typedText.classList.add('emotional');
-  typedText.textContent = 'No pasa nada… algunas cosas lindas solo necesitan un poquito más de tiempo 💗';
+  typedText.textContent = 'No pasa nada… Yo entiendo, siempre entiendo :(';
 });
 
 yesBtn.addEventListener('click', () => {
