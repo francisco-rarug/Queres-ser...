@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>¿Querés ser mi San Valentín? 💘</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="envelope" id="envelope">
+            <div class="flap"></div>
+
+            <div class="letter">
+                <h1>💌 Para vos</h1>
+                <p id="typedText"></p>
+
+                <p class="question">¿Querés ser mi San Valentín? 💖</p>
+
+                <div class="actions">
+                    <button class="btn yes" id="yesBtn">Sí 💕</button>
+                    <button class="btn no" id="noBtn">No 🙈</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="final hidden" id="final">
+            <h1>✨ Nuestra cita ✨</h1>
+            <div class="countdown">
+                <div class="time-box">
+                    <span id="days">00</span>
+                    <small>Días</small>
+                </div>
+                <div class="time-box">
+                    <span id="hours">00</span>
+                    <small>Horas</small>
+                </div>
+                <div class="time-box">
+                    <span id="minutes">00</span>
+                    <small>Min</small>
+                </div>
+                <div class="time-box">
+                    <span id="seconds">00</span>
+                    <small>Seg</small>
+                </div>
+            </div>
+
+
+            <div class="polaroid">
+                <img src="https://placekitten.com/300/300" alt="Nosotros" />
+                <span>Un recuerdo que empieza 💞</span>
+            </div>
+
+            <img class="qr"
+                src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=Cita+Especial+San+Valentin"
+                alt="QR sorpresa" />
+
+            <p class="love">Gracias por existir 💘</p>
+        </section>
+
+    </div>
+
+    <canvas id="confetti"></canvas>
+
+    <audio id="openSound" src="https://assets.mixkit.co/sfx/preview/mixkit-paper-slide-1530.mp3"></audio>
+    <audio id="music" src="https://assets.mixkit.co/music/preview/mixkit-romantic-ambience-197.mp3" loop></audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
