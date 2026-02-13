@@ -1,75 +1,65 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>¿Querés ser mi San Valentín? 💘</title>
-    <link rel="shortcut icon" href="/4359936.png" type="image/x-icon">
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>¿Querés ser mi San Valentín? 💘</title>
+  <link rel="icon" href="/4359936.png" sizes="32x32">
+
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
+  <div class="start-screen" id="startScreen">
+    <h1 class="valentine-title">💖 Feliz San Valentín 💖</h1>
+    <p>Presione cualquier tecla o haga click para continuar</p>
+  </div>
 
-    <div class="container">
-        <div class="envelope" id="envelope">
-            <div class="flap"></div>
+  <div class="container hidden" id="container">
+    <div class="envelope" id="envelope">
+      <div class="flap"></div>
 
-            <div class="letter">
-                <h1>💌 Para vos</h1>
-                <p id="typedText"></p>
+      <div class="letter">
+        <h1>💌 Para mi gordiña</h1>
+        <p id="typedText"></p>
 
-                <p class="question">¿Querés ser mi San Valentín? 💖</p>
+        <p class="question">¿Querés ser mi San Valentín? 💖</p>
 
-                <div class="actions">
-                    <button class="btn yes" id="yesBtn">Sí 💕</button>
-                    <button class="btn no" id="noBtn">No 🙈</button>
-                </div>
-            </div>
+        <div class="actions">
+          <button class="btn yes" id="yesBtn">Sí 💕</button>
+          <button class="btn no" id="noBtn">No 🙈</button>
         </div>
-
-        <section class="final hidden" id="final">
-            <h1>✨ Nuestra cita ✨</h1>
-            <div class="countdown">
-                <div class="time-box">
-                    <span id="days">00</span>
-                    <small>Días</small>
-                </div>
-                <div class="time-box">
-                    <span id="hours">00</span>
-                    <small>Horas</small>
-                </div>
-                <div class="time-box">
-                    <span id="minutes">00</span>
-                    <small>Min</small>
-                </div>
-                <div class="time-box">
-                    <span id="seconds">00</span>
-                    <small>Seg</small>
-                </div>
-            </div>
-
-
-            <div class="polaroid">
-                <img src="/WhatsApp Image 2026-02-12 at 17.19.56.jpeg" alt="Nosotros" />
-                <span>Te amo💞</span>
-            </div>
-
-            <img class="qr"
-                src="/Mi_código_QR_1-1024.jpeg"
-                alt="QR sorpresa" />
-
-            <p class="love">Gracias por existir 💘</p>
-        </section>
-
+      </div>
     </div>
 
-    <canvas id="confetti"></canvas>
+    <section class="final hidden" id="final">
+      <h1>✨ Nuestra cita ✨</h1>
 
-    <audio id="openSound" src="oxidvideos-soda-can-open-183214.mp3"></audio>
-    <audio id="music" src="u_xg7ssi08yr-heart-beat-355442.mp3" loop></audio>
+      <div class="countdown">
+        <div class="time-box"><span id="days">00</span><small>Días</small></div>
+        <div class="time-box"><span id="hours">00</span><small>Horas</small></div>
+        <div class="time-box"><span id="minutes">00</span><small>Min</small></div>
+        <div class="time-box"><span id="seconds">00</span><small>Seg</small></div>
+      </div>
 
-    <script src="script.js"></script>
+      <div class="polaroid">
+        <img src="/WhatsApp Image 2026-02-12 at 17.19.56.jpeg" alt="Nosotros">
+        <span>Te amo 💞</span>
+      </div>
+
+      <img class="qr" src="/Mi_código_QR_1-1024.jpeg" alt="QR sorpresa">
+
+      <p class="love">Gracias por existir 💘</p>
+    </section>
+  </div>
+
+  <canvas id="confetti"></canvas>
+
+  <audio id="openSound" src="royalty_free_music-soft-piano-100-bpm-121529.mp3"></audio>
+  <audio id="music" src="u_xg7ssi08yr-heart-beat-355442.mp3" loop></audio>
+
+  <script src="script.js"></script>
 </body>
-
 </html>

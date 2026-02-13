@@ -1,198 +1,188 @@
+const startScreen = document.getElementById('startScreen');
+const container = document.getElementById('container');
+
 const envelope = document.getElementById('envelope');
 const typedText = document.getElementById('typedText');
 const yesBtn = document.getElementById('yesBtn');
-const noBtn = document.getElementById('noBtn');
+let noBtn = document.getElementById('noBtn');
 const final = document.getElementById('final');
+const actions = document.querySelector('.actions');
 
 const openSound = document.getElementById('openSound');
 const music = document.getElementById('music');
 
-const text = '5 años y contando, pero nunca es mal momento para preguntarte si...';
+const text = '5 años ya, pero nunca es mal momento para preguntarte si...';
 let index = 0;
-let noCount = 0;
 
-envelope.addEventListener('click', () => {
+
+function startExperience() {
+  startScreen.classList.add('hidden');
+  container.classList.remove('hidden');
+  envelope.addEventListener('click', openEnvelope, { once: true });
+}
+
+startScreen.addEventListener('click', startExperience);
+document.addEventListener('keydown', startExperience);
+
+
+function openEnvelope() {
   envelope.classList.add('open');
   openSound.play();
   typeWriter();
-}, { once: true });
+}
+
 
 function typeWriter() {
   if (index < text.length) {
-    typedText.textContent += text.charAt(index);
-    index++;
+    typedText.textContent += text.charAt(index++);
     setTimeout(typeWriter, 60);
-  }
-}
-
-function moveNoButton() {
-  if (noCount < 4) {
-    const x = Math.random() * 120 - 60;
-    const y = Math.random() * 80 - 40;
-    noBtn.style.transform = `translate(${x}px, ${y}px)`;
-    noCount++;
-
-    if (navigator.vibrate) {
-      navigator.vibrate(25);
-    }
-
   } else {
-    noBtn.textContent = 'Pensalo de nuevo 💭';
-    noBtn.classList.add('retry');
-    noBtn.style.transform = 'translate(0,0)';
-    document.body.classList.add('sad');
+    actions.classList.add('show');
+    setTimeout(detachNoButton, 200);
   }
 }
 
-noBtn.addEventListener('mouseover', moveNoButton);
+let noX = 0;
+let noY = 0;
 
-noBtn.addEventListener('touchstart', (e) => {
-  e.preventDefault();
-  moveNoButton();
+function detachNoButton() {
+  const rect = noBtn.getBoundingClientRect();
+
+  const floatingNo = noBtn.cloneNode(true);
+  noBtn.remove();
+  noBtn = floatingNo;
+
+  document.body.appendChild(noBtn);
+
+  noX = rect.left;
+  noY = rect.top;
+
+  Object.assign(noBtn.style, {
+    position: 'fixed',
+    left: `${noX}px`,
+    top: `${noY}px`,
+    zIndex: 9999,
+    visibility: 'visible'
+  });
+
+  noBtn.addEventListener('click', onNoClick);
+}
+
+
+const trailEmojis = ['😢', '💔', '😭', '🥀', '😞'];
+const SCALE = 1.1;
+
+function fleeFromMouse(x, y) {
+  const w = noBtn.offsetWidth * SCALE;
+  const h = noBtn.offsetHeight * SCALE;
+
+  const cx = noX + w / 2;
+  const cy = noY + h / 2;
+
+  let dx = cx - x;
+  let dy = cy - y;
+
+  const dist = Math.hypot(dx, dy) || 1;
+  dx /= dist;
+  dy /= dist;
+
+  const BASE_STRENGTH = 20;  
+  const MAX_STRENGTH = 50;  
+  const proximity = Math.max(0.3, Math.min(1, dist / 240));
+  const strength = BASE_STRENGTH + (1 - proximity) * (MAX_STRENGTH - BASE_STRENGTH);
+
+  noX += dx * strength;
+  noY += dy * strength;
+
+  const pad = 10;
+  noX = Math.max(pad, Math.min(window.innerWidth - w - pad, noX));
+  noY = Math.max(pad, Math.min(window.innerHeight - h - pad, noY));
+
+  noBtn.style.left = `${noX}px`;
+  noBtn.style.top = `${noY}px`;
+
+  spawnTrail(cx, cy);
+}
+
+
+document.addEventListener('mousemove', (e) => {
+  if (!actions.classList.contains('show')) return;
+
+  const r = noBtn.getBoundingClientRect();
+  const d = Math.hypot(
+    e.clientX - (r.left + r.width / 2),
+    e.clientY - (r.top + r.height / 2)
+  );
+
+  if (d < 80) fleeFromMouse(e.clientX, e.clientY);
 });
 
 
-noBtn.addEventListener('click', () => {
-  typedText.textContent = '';
-  typedText.classList.add('emotional');
+
+function spawnTrail(x, y) {
+  for (let i = 0; i < 20; i++) {
+    const el = document.createElement('div');
+    el.className = 'emoji-trail';
+    el.textContent = trailEmojis[Math.floor(Math.random() * trailEmojis.length)];
+    el.style.left = x + (Math.random() * 60 - 30) + 'px';
+    el.style.top = y + (Math.random() * 40 - 20) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+}
+
+
+
+function onNoClick(e) {
   typedText.textContent = 'No pasa nada… Yo entiendo, siempre entiendo :(';
-});
+}
 
 
 yesBtn.addEventListener('click', () => {
-  document.body.classList.remove('sad');
-  document.body.classList.add('happy');
+
+  noBtn.style.display = 'none';
+  noBtn.style.pointerEvents = 'none';
 
   envelope.style.display = 'none';
+
   final.classList.remove('hidden');
 
   music.volume = 0.4;
   music.play();
 
-  launchHearts();
   startCountdown();
+  startHeartRain();
 });
-
 
 function startCountdown() {
   const target = new Date('2026-02-14T20:30:00');
 
-  const daysEl = document.getElementById('days');
-  const hoursEl = document.getElementById('hours');
-  const minutesEl = document.getElementById('minutes');
-  const secondsEl = document.getElementById('seconds');
-
   setInterval(() => {
     const diff = target - new Date();
+    if (diff <= 0) return;
 
-    if (diff <= 0) {
-      daysEl.textContent = '00';
-      hoursEl.textContent = '00';
-      minutesEl.textContent = '00';
-      secondsEl.textContent = '00';
-      return;
-    }
-
-    daysEl.textContent = String(Math.floor(diff / 86400000)).padStart(2, '0');
-    hoursEl.textContent = String(Math.floor(diff / 3600000) % 24).padStart(2, '0');
-    minutesEl.textContent = String(Math.floor(diff / 60000) % 60).padStart(2, '0');
-    secondsEl.textContent = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+    days.textContent = String(Math.floor(diff/86400000)).padStart(2,'0');
+    hours.textContent = String(Math.floor(diff/3600000)%24).padStart(2,'0');
+    minutes.textContent = String(Math.floor(diff/60000)%60).padStart(2,'0');
+    seconds.textContent = String(Math.floor(diff/1000)%60).padStart(2,'0');
   }, 1000);
 }
 
+function startHeartRain() {
+  const hearts = ['💖','💘','💕','❤️','💗'];
 
-const canvas = document.getElementById('confetti');
-const ctx = canvas.getContext('2d');
+  const interval = setInterval(() => {
+    const heart = document.createElement('div');
+    heart.className = 'floating-emoji';
+    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
 
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.animationDuration = (2 + Math.random() * 2) + 's';
 
-window.addEventListener('resize', () => {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-});
+    document.body.appendChild(heart);
 
-let hearts = [];
+    setTimeout(() => heart.remove(), 4000);
+  }, 120);
 
-function launchHearts() {
-  hearts = [];
-  for (let i = 0; i < 40; i++) {
-    hearts.push({
-      x: Math.random() * canvas.width,
-      y: canvas.height + Math.random() * 200,
-      s: Math.random() * 2 + 1,
-      a: Math.random() * Math.PI * 2
-    });
-  }
-  animateHearts();
-}
-
-function animateHearts() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  hearts.forEach(h => {
-    ctx.save();
-    ctx.translate(h.x, h.y);
-    ctx.rotate(h.a);
-    ctx.fillStyle = '#ff4d6d';
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(-10, -10, -20, 10, 0, 20);
-    ctx.bezierCurveTo(20, 10, 10, -10, 0, 0);
-    ctx.fill();
-    ctx.restore();
-
-    h.y -= h.s;
-    h.a += 0.01;
-  });
-
-  requestAnimationFrame(animateHearts);
-}
-
-const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-
-if (isMobile) {
-  noBtn.addEventListener('click', () => {
-    if (noCount < 3) {
-      noBtn.classList.add('shake');
-      noCount++;
-      setTimeout(() => noBtn.classList.remove('shake'), 500);
-    } else {
-      noBtn.textContent = 'Pensalo de nuevo 💭';
-      noBtn.classList.add('retry');
-      document.body.classList.add('sad');
-    }
-
-    typedText.textContent = 'No pasa nada… Yo entiendo, siempre entiendo 🖤';
-  });
-}
-
-const colors = ['#1a1a2e', '#2c2c54', '#3a0ca3', '#7209b7'];
-let colorIndex = 0;
-
-setInterval(() => {
-  document.body.style.background = colors[colorIndex];
-  colorIndex = (colorIndex + 1) % colors.length;
-}, 6000);
-
-const emojis = ['💖', '💘', '💔', '✨', '💕'];
-
-function createEmoji() {
-  const emoji = document.createElement('div');
-  emoji.className = 'floating-emoji';
-  emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-
-  emoji.style.left = Math.random() * 100 + 'vw';
-  emoji.style.animationDuration = 6 + Math.random() * 4 + 's';
-
-  document.body.appendChild(emoji);
-
-  setTimeout(() => emoji.remove(), 10000);
-}
-
-setInterval(createEmoji, 1200);
-
-if (isMobile) {
-  envelope.classList.add('mobile-float');
+  window.heartRainInterval = interval;
 }
